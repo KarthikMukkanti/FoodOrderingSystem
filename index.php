@@ -60,7 +60,7 @@ session_start();
         <section class="hero bg-image" data-image-src="images/img/pimg.jpg">
             <div class="hero-inner">
                 <div class="container text-center hero-text font-white">
-                    <h1>Order Foods in Prior & <br> Have a Hassle-Free Dine-In </h1>
+                    <h1>Order Food in Prior & <br> Have a Hassle-Free Dine-In </h1>
                     
                     <div class="banner-form">
                         <form class="form-inline">
