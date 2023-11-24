@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<?php
+include("../connection/connect.php");
+error_reporting(0);
+session_start();
+
+?>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <title>All Menu</title>
+    <link href="css/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="css/helper.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #donutGraph {
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body class="fix-header fix-sidebar">
+
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+        </svg>
+    </div>
+
+    <div id="main-wrapper">
+
+        <div class="header">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="dashboard.php">
+
+                        <span><img src="images/icn.png" alt="homepage" class="dark-logo" /></span>
+                    </a>
+                </div>
+                <?php
+
+                $session = $_SESSION["adm_id"];
+                $user = mysqli_query($db, "select * FROM restaurant where restaurant.rs_id=(select rs_id from admin where adm_id='$session');");
+                $rows = mysqli_fetch_array($user);
+                ?>
+                <div class="navbar-collapse">
+
+                    <ul class="navbar-nav mr-auto mt-md-0">
+
+
+
+
+                    </ul><?php echo $rows["title"]; ?>
+
+                    <ul class="navbar-nav my-lg-0">
+
+
+
+                        <li class="nav-item dropdown">
+
+                            <div class="dropdown-menu dropdown-menu-right mailbox animated zoomIn">
+                                <ul>
+                                    <li>
+                                        <div class="drop-title">Notifications</div>
+                                    </li>
+
+                                    <li>
+                                        <a class="nav-link text-center" href="javascript:void(0);"> <strong>Check all notifications</strong> <i class="fa fa-angle-right"></i> </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-muted  " href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="images/bookingSystem/user-icn.png" alt="user" class="profile-pic" /></a>
+                            <div class="dropdown-menu dropdown-menu-right animated zoomIn">
+                                <ul class="dropdown-user">
+                                    <li><a href="logout.php"><i class="fa fa-power-off"></i> Logout</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+        <div class="left-sidebar">
+
+                <div class="scroll-sidebar">
+
+                    <nav class="sidebar-nav">
+                        <ul id="sidebarnav">
+                            <li class="nav-devider"></li>
+                            <li class="nav-label">Home  </li>
+                            <li> <a href="dashboard.php"><i class="fa fa-tachometer"></i><span>Dashboard</span></a>
+                            </li>
+                            <li class="nav-label">Log</li>
+                            <!-- <li> <a href="all_users.php">  <span><i class="fa fa-user f-s-20 "></i></span><span>Users</span></a></li> -->
+                            <!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-archive f-s-20 color-warning"></i><span class="hide-menu">Restaurant</span></a>
+                            <ul aria-expanded="false" class="collapse">
+								<li><a href="all_restaurant.php">All Restaurant</a></li>
+								<li><a href="add_category.php">Add Category</a></li>
+                                <li><a href="add_restaurant.php">Add Restaurant</a></li>
+                                
+                            </ul>
+                        </li> -->
+
+                            <!-- <li> <a class="has-arrow  " href="#" aria-expanded="false"><i class="fa fa-cutlery" aria-hidden="true"></i><span class="hide-menu">Menu</span></a>
+                            <ul aria-expanded="false" class="collapse">
+								<li><a href="all_menu.php">All Menues</a></li>
+								<li><a href="add_menu.php">Add Menu</a></li>
+                              
+                                
+                            </ul>
+                        </li> -->
+                            <li> <a href="all_menu.php"><i class="fa fa-cutlery" aria-hidden="true"></i><span>All Menues</span></a></li>
+                            <li> <a href="add_menu.php"><i class="fa fa-plus" aria-hidden="true"></i><span>Add Menu</span></a></li>
+                            <li> <a href="all_orders.php"><i class="fa fa-shopping-cart" aria-hidden="true"></i><span>Orders</span></a></li>
+                            <li> <a href="reports.php"><i class="fa fa-file-text-o" aria-hidden="true"></i><span>Reports</span></a></li>
+                            <li> <a href="item_reports.php"><i class="fa fa-bar-chart" aria-hidden="true"></i><span>Items report</span></a></li>
+                        </ul>
+                    </nav>
+
+                </div>
+
+            </div>
+
+        <div class="page-wrapper">
+
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="col-lg-12">
+                            <div class="card card-outline-primary">
+                                <div class="card-header">
+                                    <h4 class="m-b-0 text-white">Reports</h4>
+                                </div>
+                                <button onClick="window.print()">Print Reports</button>
+
+                                <!-- bar Chart -->
+                                <div>
+                                    <?php
+                                            
+                                        $query1 = $db->query("
+                                        SELECT u.title, SUM(u.quantity) AS total_quantity
+                                        FROM users_orders u
+                                        JOIN restaurant r ON u.rs_id = r.rs_id
+                                        WHERE u.status = 'closed' and r.rs_id =$rows[rs_id]
+                                        GROUP BY u.title;
+                                        ");
+            
+                                        $title1 = [];
+                                        $quantity1 = [];
+            
+                                        foreach ($query1 as $data) {
+                                        $title1[] = $data['title'];
+                                        $quantity1[] = $data['total_quantity'];
+                                            }
+                                        
+                                    ?>
+                                    <div class="chart-container">
+                                        <div>
+                                            <canvas id="myChart1" style="height: 300px; width: 600px;"></canvas>
+                                        </div>
+                                    </div>
+
+                                    <script>
+                                        // Chart 1
+                                        const labels1 = <?php echo json_encode($title1) ?>;
+                                        const data1 = {
+                                            labels: labels1,
+                                            datasets: [
+                                            {
+                                                label: 'Item vs Quantity (<?php echo $rows["title"]; ?>)',
+                                                data: <?php echo json_encode($quantity1) ?>,
+                                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                borderColor: 'rgb(255, 99, 132)',
+                                                borderWidth: 1
+                                            }
+                                            ]
+                                        };
+
+                                        const config1 = {
+                                            type: 'bar',
+                                            data: data1,
+                                            options: {
+                                            scales: {
+                                                y: {
+                                                beginAtZero: true
+                                                }
+                                            }
+                                            }
+                                        };
+
+                                        var myChart1 = new Chart(
+                                            document.getElementById('myChart1'),
+                                            config1
+                                        );
+                                    </script>
+                                </div>
+
+                                
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer class="footer"> © 2023 - Online Food Ordering System </footer>
+
+    </div>
+    </div>
+
+    </div>
+
+    <footer class="footer"> © 2023 - Online Food Ordering System </footer>
+
+    </div>
+
+    </div>
+
+    <script src="js/lib/jquery/jquery.min.js"></script>
+    <script src="js/lib/bootstrap/js/popper.min.js"></script>
+    <script src="js/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/jquery.slimscroll.js"></script>
+    <script src="js/sidebarmenu.js"></script>
+    <script src="js/lib/sticky-kit-master/dist/sticky-kit.min.js"></script>
+    <script src="js/custom.min.js"></script>
+    <script src="js/lib/datatables/datatables.min.js"></script>
+    <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+    <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="js/lib/datatables/cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="js/lib/datatables/cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="js/lib/datatables/cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="js/lib/datatables/datatables-init.js"></script>
+</body>
+
+</html>
